@@ -1065,7 +1065,7 @@
         </option>
         <option>
           <name>Previous Derivative File</name>
-          <state>No device selected</state>
+          <state>$TOOLKIT_DIR$\config\devices\</state>
         </option>
         <option>
           <name>Showed Derivative</name>
@@ -1190,7 +1190,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>xxx.h</state>
+          <state></state>
         </option>
         <option>
           <name>RTLibraryPath</name>
@@ -1292,7 +1292,7 @@
         <option>
           <name>GRuntimeLibSelectSlave2</name>
           <version>0</version>
-          <state>1</state>
+          <state>3</state>
         </option>
       </data>
     </settings>
@@ -1305,7 +1305,7 @@
         <debug>0</debug>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.r51</state>
         </option>
         <option>
           <name>CCDefines</name>
@@ -1517,7 +1517,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>1</state>
+          <state>3</state>
         </option>
         <option>
           <name>CompilerMisraRules04</name>
@@ -1746,7 +1746,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>temperature_meter.a51</state>
         </option>
         <option>
           <name>OutputFormat</name>
@@ -2090,6 +2090,18 @@
       <data/>
     </settings>
   </configuration>
+  <file>
+    <name>$PROJ_DIR$\hal_i2c.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\hal_i2c.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\hal_lcd.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\hal_lcd.h</name>
+  </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>

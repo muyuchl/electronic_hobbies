@@ -1,16 +1,14 @@
 #include <ioCC2541.h>	 
 
-typedef unsigned char uint8;
-typedef unsigned short int  uint16;
+#include "hal_lcd.h"
 
-//#define LED1 P1_0                //位控制，定义P1.0口为LED1
-#define LED1 P1_1                //位控制，定义P1.1口为LED1
+
 
 /****************************************************************************
-名    称: DelayMS()
-功    能: 毫秒延时，系统时钟不配置时默认使用内部16M
-入口参数: msec 延时参数，注意，最大数值为65536ms
-出口参数: 无
+DelayMS()
+osc: 16M
+max delay 65536ms
+
 ****************************************************************************/
 void DelayMS(uint16 msec)
 { 
@@ -21,28 +19,34 @@ void DelayMS(uint16 msec)
 }
 
 /****************************************************************************
-名    称: InitLed()
-功    能: 初始化LED灯相应的IO口
-入口参数: 无
-出口参数: 无
+
 ****************************************************************************/
+
+/*
 void InitGPIO(void)
 {
-  P1DIR |= 0x02; //P1.1定义为输出口
-  P1SEL &= ~0x02;	//P1.1定义为一般GPIO
+  P1DIR |= 0x02; //P1.1  output
+  P1SEL &= ~0x02;	//P1.1 gpio
 }
+*/
 
 
 void main(void)
 {     
-  InitGPIO();                   //设置LED灯相应的GPIO口
+ // InitGPIO();                   //
+  
+  DelayMS(800); // orig is 115ms
+  
+  //
+  
+  HalLcdInit();
 
-  while(1)                     //死循环
+  while(1)                     //
   {
-    LED1 = 1;                //点亮LED1      
-    DelayMS(1500);           //延时1.5秒
-    
-    LED1 = 0;                //LED1熄灭
-    DelayMS(1500);           //延时1.5秒
+   
+    HalLcdAllOn();
+    DelayMS(5000);           //
+    HalLcdAllOff();
+    DelayMS(5000);   
   }    
 }
