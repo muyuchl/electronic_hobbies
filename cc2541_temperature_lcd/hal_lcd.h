@@ -17,7 +17,7 @@ extern "C"
 /*********************************************************************
  * CONSTANTS
  */
-
+#define LCD_I2C_ADDR 0x3E
 
 /*********************************************************************
  * FUNCTIONS
@@ -25,6 +25,12 @@ extern "C"
 void HalLcdInit(void);
 void HalLcdAllOn(void);
 void HalLcdAllOff(void);
+
+void setTE(int16 valueTenthDegC);
+void setRH(int valueTenth);
+void setBattery(int level);
+
+void writeBufToLcd(void);
 
 /*********************************************************************/
 

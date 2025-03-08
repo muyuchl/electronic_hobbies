@@ -35,7 +35,7 @@ void main(void)
 {     
  // InitGPIO();                   //
   
-  DelayMS(800); // orig is 115ms
+  DelayMS(200); // orig is 115ms
   
   //
   
@@ -44,9 +44,26 @@ void main(void)
   while(1)                     //
   {
    
-    HalLcdAllOn();
-    DelayMS(5000);           //
-    HalLcdAllOff();
-    DelayMS(5000);   
+    setTE(1234);    // 123.4
+    DelayMS(2000);
+    
+    setTE(5678);    // 567.8
+    DelayMS(2000);
+    
+    setTE(268);    // 26.8
+    DelayMS(2000);
+    
+    setTE(45);    // 4.5
+    DelayMS(2000);
+    
+    setTE(0);    // 0.0
+    DelayMS(2000);
+    
+    setTE(-52);    // -5.2
+    DelayMS(2000);
+    
+    setTE(-168);    // -16.8
+    DelayMS(2000);
+      
   }    
 }
