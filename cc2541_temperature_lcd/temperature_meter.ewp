@@ -2115,6 +2115,12 @@
     <name>$PROJ_DIR$\hal_sht20.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\hal_sleep.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\hal_sleep.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
 </project>

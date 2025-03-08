@@ -3,12 +3,16 @@
 #include "hal_lcd.h"
 #include "hal_sht20.h"
 #include "hal_bat.h"
+#include "hal_sleep.h"
 
 int16 teTenth = 0;
 bool teOk;
 int16 rhTenth = 0;
 bool rhOk;
 int batLevel = 0;
+
+// sleep time, unit is second
+#define SLEEP_INTERVAL 10
 
 /****************************************************************************
 DelayMS()
@@ -23,6 +27,7 @@ void DelayMS(uint16 msec)
     for (i=0; i<msec; i++)
         for (j=0; j<536; j++);
 }
+
 
 /****************************************************************************
 
@@ -40,7 +45,9 @@ void InitGPIO(void)
 void main(void)
 {     
  // InitGPIO();                   //
+  // todo: pull up p1.0, p1.1
 
+  InitSleepTimer(); 
   DelayMS(200); // orig is 115ms
   
   //
@@ -70,7 +77,9 @@ void main(void)
     
     HalLcdUpdate(teTenth, teOk, rhTenth, rhOk, batLevel);
     
-    DelayMS(5000);
+    SetSleepTime(SLEEP_INTERVAL);   
+    // todo: reset i2c, so no scl glich during sleep
+    PowerMode(2);    //进入睡眠模式PM2
    
   }    
 }

@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>3925093233</fileChecksum>
+  <fileChecksum>4035590460</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -36,6 +36,10 @@
       <file>$PROJ_DIR$\Debug\Obj\hal_bat.r51</file>
       <file>$PROJ_DIR$\hal_bat.h</file>
       <file>$PROJ_DIR$\Debug\Obj\hal_bat.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\hal_sleep.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\hal_sleep.r51</file>
+      <file>$PROJ_DIR$\hal_sleep.h</file>
+      <file>$PROJ_DIR$\hal_sleep.c</file>
     </outputs>
     <file>
       <name>$PROJ_DIR$\hal_i2c.c</name>
@@ -71,7 +75,7 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 7 27 6 17 22 1 4</file>
+          <file> 7 27 6 17 22 31 1 4</file>
         </tool>
       </inputs>
     </file>
@@ -136,11 +140,11 @@
       <inputs>
         <tool>
           <name>ICC8051</name>
-          <file> 2 18 23 11 28</file>
+          <file> 2 18 23 11 28 32 21 14</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 2 18 23 11 28</file>
+          <file> 2 18 23 11 28 32 21 14</file>
         </tool>
       </inputs>
     </file>
@@ -173,6 +177,29 @@
         <tool>
           <name>BICOMP</name>
           <file> 28 25 21 23 14</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\hal_sleep.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 31</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 30</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 2 32 21 23 14</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2 32 21 23 14</file>
         </tool>
       </inputs>
     </file>
