@@ -34,18 +34,10 @@ void InitGPIO(void)
 */
 
 
-void SysClkSet_32M(void)//设置系统时钟为32MHz
-{
-  CLKCONCMD &= ~0x40;
-  while(CLKCONSTA & 0x40);    
-  CLKCONCMD &= ~0x47;  
-}
-
 void main(void)
 {     
  // InitGPIO();                   //
-  
-  SysClkSet_32M();
+
   DelayMS(200); // orig is 115ms
   
   //
@@ -69,7 +61,8 @@ void main(void)
     }
     */
     int level = hal_bat_read_level();
-    setTE(level);
+    
+    setBattery(level);
     
     DelayMS(2000);
    

@@ -207,6 +207,50 @@ void setRH(int16 valueTenth)
     writeBufToLcd();
 }
 
+void setBattery(int level)
+{
+   // todo: move it elsewhere
+  HalI2CInit(LCD_I2C_ADDR, i2cClock_267KHZ); 
+  
+  //  clear segs first, otherwise it is not updated
+  // byte 4, high 4 bit
+  plcdbuf[4] &= 0x0F;
+  
+  if (level > 4) {
+        level = 4;
+    } else if (level < 0) {
+        level = 0;
+    }
+
+    // first bat seg
+  if (level > 0) {
+      int byteOffset = 4;
+      int bitOffset = 4;
+      plcdbuf[byteOffset] |= (1 << bitOffset);
+  }
+
+  // second bat seg
+  if (level > 1) {
+      int byteOffset = 4;
+      int bitOffset = 5;
+      plcdbuf[byteOffset] |= (1 << bitOffset);
+  }
+
+  if (level > 2) {
+      int byteOffset = 4;
+      int bitOffset = 6;
+      plcdbuf[byteOffset] |= (1 << bitOffset);
+  }
+
+  if (level > 3) {
+      int byteOffset = 4;
+      int bitOffset = 7;
+      plcdbuf[byteOffset] |= (1 << bitOffset);
+  }
+  // todo: call in main when all data is set
+    writeBufToLcd();
+}
+
 void writeBufToLcd(void)
 {
 //  uint8 local_buf[9];

@@ -215,9 +215,31 @@ bool HalAdcCheckVdd(uint8 vdd)
 int hal_bat_read_level()
 {
   HalAdcInit();
-  uint16 adc=HalAdcRead(HAL_ADC_CHN_VDD3, HAL_ADC_RESOLUTION_10);
+  uint16 adc=HalAdcRead(HAL_ADC_CHN_VDD3, HAL_ADC_RESOLUTION_8);
+  
+  // the internal ref voltage is 1.24V for cc2541
+  // don't know why it is not accurate, here we just use the experiment result
+  // 3.3V =>  adc result 117
+  // 
+  // 3V => deduced adc : 106
+  
+  // 2.69V 97
+  // 2.48V 89
+  // 2v => 71
+  
+  // original fw, 2.6V show two segs
   
   
-
-  return adc;
+  int level = BAT_LEVEL_EMPTY;
+  if (level > 85) {
+    level = BAT_LEVEL_1;
+  } else if (level > 93) {
+    level = BAT_LEVEL_2;
+  } else if (level > 98) {
+    level = BAT_LEVEL_3;    
+  } else {
+    level = BAT_LEVEL_4;
+  }
+  
+  return level;
 }
