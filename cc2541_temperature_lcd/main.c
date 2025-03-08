@@ -14,6 +14,9 @@ int batLevel = 0;
 // sleep time, unit is second
 #define SLEEP_INTERVAL 10
 
+// SET OVR bit, so in sleep mode, prevent scl pin glitch, pullup enabled
+#define I2C_WRAPPER_ENABLE() st( I2CWC    =     0x8C;      )
+
 /****************************************************************************
 DelayMS()
 osc: 16M
@@ -45,7 +48,6 @@ void InitGPIO(void)
 void main(void)
 {     
  // InitGPIO();                   //
-  // todo: pull up p1.0, p1.1
 
   InitSleepTimer(); 
   DelayMS(200); // orig is 115ms
@@ -78,7 +80,8 @@ void main(void)
     HalLcdUpdate(teTenth, teOk, rhTenth, rhOk, batLevel);
     
     SetSleepTime(SLEEP_INTERVAL);   
-    // todo: reset i2c, so no scl glich during sleep
+    // so no scl glich during sleep
+    I2C_WRAPPER_ENABLE();
     PowerMode(2);    //进入睡眠模式PM2
    
   }    
