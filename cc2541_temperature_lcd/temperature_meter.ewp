@@ -2091,6 +2091,12 @@
     </settings>
   </configuration>
   <file>
+    <name>$PROJ_DIR$\hal_bat.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\hal_bat.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\hal_i2c.c</name>
   </file>
   <file>

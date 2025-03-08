@@ -2,6 +2,7 @@
 
 #include "hal_lcd.h"
 #include "hal_sht20.h"
+#include "hal_bat.h"
 
 int16 teTenth = 0;
 int16 rhTenth = 0;
@@ -33,21 +34,28 @@ void InitGPIO(void)
 */
 
 
+void SysClkSet_32M(void)//设置系统时钟为32MHz
+{
+  CLKCONCMD &= ~0x40;
+  while(CLKCONSTA & 0x40);    
+  CLKCONCMD &= ~0x47;  
+}
+
 void main(void)
 {     
  // InitGPIO();                   //
   
-  
+  SysClkSet_32M();
   DelayMS(200); // orig is 115ms
   
   //
   
   HalLcdInit();
-  HalSHT20Init();
+ // HalSHT20Init();
 
   while(1)                     //
   {
-    
+    /*
     if (0 == HalSHT20ReadTE(&teTenth)) {
       setTE(teTenth);
     } else {
@@ -59,6 +67,9 @@ void main(void)
     } else {
       // read error
     }
+    */
+    int level = hal_bat_read_level();
+    setTE(level);
     
     DelayMS(2000);
    
