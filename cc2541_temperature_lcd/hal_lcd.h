@@ -23,11 +23,14 @@ extern "C"
  * FUNCTIONS
  */
 void HalLcdInit(void);
-void HalLcdAllOn(void);
-void HalLcdAllOff(void);
 
+
+void HalLcdUpdate(int16 valueTenthDegC, bool teOK, int16 rhValueTenth,
+                  bool rhOK, int batLevel);
+
+//  todo: makefollowing to static function
 void setTE(int16 valueTenthDegC);
-void setRH(int16 valueTenth);
+void setRH(int16 rhValueTenth);
 void setBattery(int level);
 
 void writeBufToLcd(void);

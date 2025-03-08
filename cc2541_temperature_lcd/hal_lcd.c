@@ -15,6 +15,9 @@ unsigned char buf_with_ramaddr[1+LCD_BUF_SIZE];
 
 unsigned char *plcdbuf = buf_with_ramaddr+1;
 
+
+static void HalLcdAllOn(void);
+static void HalLcdAllOff(void);
 static void reset_buf();
 static void update_segs(uint8 seg_data, const uint8 *digit_position);
 
@@ -125,13 +128,26 @@ void HalLcdAllOff(void)
   uint8 ret = HalI2CWrite(9, buf);
 }
 
-void setTE(int16 valueTenthDegC)
+void HalLcdUpdate(int16 valueTenthDegC, bool teOK, int16 rhValueTenth,
+                  bool rhOK, int batLevel)
 {
+  reset_buf();
+  if (teOK) {
+    setTE(valueTenthDegC);
+  }
+  if (rhOK) {
+    setRH(rhValueTenth);
+  }
+  
+  setBattery(batLevel);
+  
   // todo: move it elsewhere
   HalI2CInit(LCD_I2C_ADDR, i2cClock_267KHZ); 
-  
-  reset_buf();
+  writeBufToLcd();
+}
 
+void setTE(int16 valueTenthDegC)
+{
     unsigned char minus = 0;
     if (valueTenthDegC < 0) {
         minus = 1;
@@ -173,16 +189,12 @@ void setTE(int16 valueTenthDegC)
     }
 
     
-    // todo: call in main when all data is set
-    writeBufToLcd();
 }
 
 // 
 void setRH(int16 valueTenth)
 {
-  // todo: move it elsewhere
-  HalI2CInit(LCD_I2C_ADDR, i2cClock_267KHZ); 
-  
+ 
     unsigned char segs = 0;
 
     unsigned char d5 = (valueTenth/100) % 10;
@@ -203,14 +215,10 @@ void setRH(int16 valueTenth)
     update_segs(segs, DIGIT_7_SEGS);
   
     
-    // todo: call in main when all data is set
-    writeBufToLcd();
 }
 
 void setBattery(int level)
 {
-   // todo: move it elsewhere
-  HalI2CInit(LCD_I2C_ADDR, i2cClock_267KHZ); 
   
   //  clear segs first, otherwise it is not updated
   // byte 4, high 4 bit
@@ -247,17 +255,11 @@ void setBattery(int level)
       int bitOffset = 7;
       plcdbuf[byteOffset] |= (1 << bitOffset);
   }
-  // todo: call in main when all data is set
-    writeBufToLcd();
+ 
 }
 
 void writeBufToLcd(void)
 {
-//  uint8 local_buf[9];
-  
-//  for (int i = 0; i < 1 + LCD_BUF_SIZE; i++) {
-//    local_buf[i] = buf_with_ramaddr[i];
-//  }
   
   uint8 ret = HalI2CWrite(9, buf_with_ramaddr);
   if (ret != 9) {
@@ -272,17 +274,17 @@ static void reset_buf()
         plcdbuf[i] = 0;
     }
 
-#if 0
+#if 1
     // set deciaml point and battery frame
     int byteOffset = 2;
     int bitOffset = 7;
 
-    buf[byteOffset] |= (1 << bitOffset);
+    plcdbuf[byteOffset] |= (1 << bitOffset);
 
     // set degree celsius
     byteOffset = 5;
     bitOffset = 4;
-    buf[byteOffset] |= (1 << bitOffset);
+    plcdbuf[byteOffset] |= (1 << bitOffset);
 #endif
 }
 

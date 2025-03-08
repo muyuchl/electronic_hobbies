@@ -5,7 +5,10 @@
 #include "hal_bat.h"
 
 int16 teTenth = 0;
+bool teOk;
 int16 rhTenth = 0;
+bool rhOk;
+int batLevel = 0;
 
 /****************************************************************************
 DelayMS()
@@ -43,28 +46,30 @@ void main(void)
   //
   
   HalLcdInit();
- // HalSHT20Init();
+  HalSHT20Init();
 
   while(1)                     //
   {
-    /*
+    
     if (0 == HalSHT20ReadTE(&teTenth)) {
-      setTE(teTenth);
+      teOk = TRUE;
     } else {
       // read error
+      teOk = FALSE;
     }
     
     if (0 == HalSHT20ReadRH(&rhTenth)) {
-      setRH(rhTenth);
+      rhOk = TRUE;
     } else {
       // read error
+      rhOk = FALSE;
     }
-    */
-    int level = hal_bat_read_level();
     
-    setBattery(level);
+    batLevel = hal_bat_read_level();
     
-    DelayMS(2000);
+    HalLcdUpdate(teTenth, teOk, rhTenth, rhOk, batLevel);
+    
+    DelayMS(5000);
    
    
   }    
