@@ -56,3 +56,32 @@ int HalSHT20ReadTE(int16 *teTenth)
   }
   
 }
+
+int HalSHT20ReadRH(int16 *rhTenth)
+{
+  // todo: move this elsewhere
+  HalI2CInit(SHT20_I2C_ADDR, i2cClock_267KHZ);
+  
+  uint8 cmd = SHT20_CMD_HUMI_T_H;
+  
+  uint8 data_read[3] = {0};
+  
+  HalI2CWrite(1,&cmd);
+  
+  DelayMS(20);
+  
+  if (3 == HalI2CRead(3, data_read)) {
+    // you can calc crc
+    
+    // convert
+    uint16 rawH = ((uint16)(data_read[0]) << 8) | (data_read[1]);
+    rawH &= ~0x0003; // clear bits [1..0] (status bits)
+    
+    double v = -6.0 + 125.0/65536 * (double)rawH; // RH= -6 + 125 * SRH/2^16
+    *rhTenth = (int16)(v * 10);
+    return 0;
+  } else {
+    // read fail
+    return -1;
+  }
+}

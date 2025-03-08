@@ -7,7 +7,7 @@ void HalSHT20Init(void);
 
 
 int HalSHT20ReadTE(int16 *teTenth);
-
+int HalSHT20ReadRH(int16 *rhTenth);
 
 
 #endif // HAL_SHT20_H

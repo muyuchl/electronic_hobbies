@@ -177,6 +177,35 @@ void setTE(int16 valueTenthDegC)
     writeBufToLcd();
 }
 
+// 
+void setRH(int16 valueTenth)
+{
+  // todo: move it elsewhere
+  HalI2CInit(LCD_I2C_ADDR, i2cClock_267KHZ); 
+  
+    unsigned char segs = 0;
+
+    unsigned char d5 = (valueTenth/100) % 10;
+    if (d5 == 0 ) {
+        // not show
+    } else {
+        segs = DIGIT_FONT[d5];
+        update_segs(segs, DIGIT_5_SEGS);
+    }
+
+    unsigned char d6 = (valueTenth/10) % 10;
+    segs = DIGIT_FONT[d6];
+    update_segs(segs, DIGIT_6_SEGS);
+
+
+    unsigned char d7 = valueTenth % 10;
+    segs = DIGIT_FONT[d7];
+    update_segs(segs, DIGIT_7_SEGS);
+  
+    
+    // todo: call in main when all data is set
+    writeBufToLcd();
+}
 
 void writeBufToLcd(void)
 {

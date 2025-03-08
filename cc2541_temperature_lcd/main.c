@@ -4,6 +4,7 @@
 #include "hal_sht20.h"
 
 int16 teTenth = 0;
+int16 rhTenth = 0;
 
 /****************************************************************************
 DelayMS()
@@ -49,6 +50,12 @@ void main(void)
     
     if (0 == HalSHT20ReadTE(&teTenth)) {
       setTE(teTenth);
+    } else {
+      // read error
+    }
+    
+    if (0 == HalSHT20ReadRH(&rhTenth)) {
+      setRH(rhTenth);
     } else {
       // read error
     }

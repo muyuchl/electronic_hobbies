@@ -27,7 +27,7 @@ void HalLcdAllOn(void);
 void HalLcdAllOff(void);
 
 void setTE(int16 valueTenthDegC);
-void setRH(int valueTenth);
+void setRH(int16 valueTenth);
 void setBattery(int level);
 
 void writeBufToLcd(void);
