@@ -1,8 +1,9 @@
 #include <ioCC2541.h>	 
 
 #include "hal_lcd.h"
+#include "hal_sht20.h"
 
-
+int16 teTenth = 0;
 
 /****************************************************************************
 DelayMS()
@@ -35,35 +36,25 @@ void main(void)
 {     
  // InitGPIO();                   //
   
+  
   DelayMS(200); // orig is 115ms
   
   //
   
   HalLcdInit();
+  HalSHT20Init();
 
   while(1)                     //
   {
+    
+    if (0 == HalSHT20ReadTE(&teTenth)) {
+      setTE(teTenth);
+    } else {
+      // read error
+    }
+    
+    DelayMS(2000);
    
-    setTE(1234);    // 123.4
-    DelayMS(2000);
-    
-    setTE(5678);    // 567.8
-    DelayMS(2000);
-    
-    setTE(268);    // 26.8
-    DelayMS(2000);
-    
-    setTE(45);    // 4.5
-    DelayMS(2000);
-    
-    setTE(0);    // 0.0
-    DelayMS(2000);
-    
-    setTE(-52);    // -5.2
-    DelayMS(2000);
-    
-    setTE(-168);    // -16.8
-    DelayMS(2000);
-      
+   
   }    
 }

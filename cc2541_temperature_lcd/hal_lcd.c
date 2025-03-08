@@ -127,6 +127,9 @@ void HalLcdAllOff(void)
 
 void setTE(int16 valueTenthDegC)
 {
+  // todo: move it elsewhere
+  HalI2CInit(LCD_I2C_ADDR, i2cClock_267KHZ); 
+  
   reset_buf();
 
     unsigned char minus = 0;
