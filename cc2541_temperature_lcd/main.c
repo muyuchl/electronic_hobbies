@@ -49,7 +49,8 @@ void main(void)
   HalSHT20Init();
 
   while(1)                     //
-  {
+  {    
+    HalSHT20I2CSelect();
     
     if (0 == HalSHT20ReadTE(&teTenth)) {
       teOk = TRUE;
@@ -70,7 +71,6 @@ void main(void)
     HalLcdUpdate(teTenth, teOk, rhTenth, rhOk, batLevel);
     
     DelayMS(5000);
-   
    
   }    
 }

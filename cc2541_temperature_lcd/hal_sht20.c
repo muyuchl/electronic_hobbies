@@ -21,26 +21,51 @@
 
 extern void DelayMS(uint16 msec);
 
+
 void HalSHT20Init(void)
 {
+  uint8 usr;    // user register
+  uint8 buf[2] = {0};
   
+  // todo: move this elsewhere
+  HalI2CInit(SHT20_I2C_ADDR, i2cClock_267KHZ);
   
-  // todo: set precision
+  uint8 cmd = SHT20_CMD_READ_U_R;
+  
+  if (HalI2CWrite(1,&cmd) == 1)
+  {
+    /* Now read data */
+    HalI2CRead(1, &usr);
+  }
+  
+  // Set 11 bit resolution
+  usr &= USR_REG_RES_MASK;
+  usr |= USR_REG_11BITRES;
+  
+  buf[0] = SHT20_CMD_WRITE_U_R;
+  buf[1] = usr;
+  HalI2CWrite(2, buf);
+  
+}
+
+void HalSHT20I2CSelect(void)
+{
+      
+  HalI2CInit(SHT20_I2C_ADDR, i2cClock_267KHZ);
+
 }
 
 // return 0 for ok, -1 fail
 int HalSHT20ReadTE(int16 *teTenth)
 {
-  // todo: move this elsewhere
-  HalI2CInit(SHT20_I2C_ADDR, i2cClock_267KHZ);
-  
   uint8 cmd = SHT20_CMD_TEMP_T_H;
   
   uint8 data_read[3] = {0};
   
   HalI2CWrite(1,&cmd);
   
-  DelayMS(50);
+  // 11 bit use max 11ms, original code waits 20.5ms
+  DelayMS(25);
   
   if (3 == HalI2CRead(3, data_read)) {
     // you can calc crc
@@ -57,17 +82,15 @@ int HalSHT20ReadTE(int16 *teTenth)
   
 }
 
+// suppose the i2c address is already selected
 int HalSHT20ReadRH(int16 *rhTenth)
 {
-  // todo: move this elsewhere
-  HalI2CInit(SHT20_I2C_ADDR, i2cClock_267KHZ);
-  
   uint8 cmd = SHT20_CMD_HUMI_T_H;
-  
   uint8 data_read[3] = {0};
   
   HalI2CWrite(1,&cmd);
   
+  // datasheet, 11bit, max 15ms, origianl fw wait 10.4ms, seems not enough, why
   DelayMS(20);
   
   if (3 == HalI2CRead(3, data_read)) {
