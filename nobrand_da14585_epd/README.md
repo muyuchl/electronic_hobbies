@@ -20,14 +20,17 @@ I baught this device from taobao for 1.3 RMB.
 | power   | p21    |
 
 # usage:
-put the project at sdk's example, 6.0.18.1182.1\projects\target_apps\peripheral_examples\
-
+- to test epd only, put the project at sdk's example, 6.0.18.1182.1\projects\target_apps\peripheral_examples\
+- to test ble with web support, put the ble enabled project upder ble_examples
 # note
 - the OTP is burnt, but there is a secondary bootloader, user project_multipart_binary_v2.py to generate the image. Production header is at 0x38000:  
 MEM_LOC_FOR_PRODUCT_HEADER 	= "0x38000" 
-
+- my device keeps rebooting when I connect it to debugger, don't known why
+- the ble is not tested on this board, I develop it on another da14585 device, only the epd pins differ
 
 # todo:
 - the data direction seems wrong
-- add ble feature to send picture? There are open source project for nrf51802 and tlsr mcu.
 
+
+# reference
+https://github.com/tsl0922/EPD-nRF5#

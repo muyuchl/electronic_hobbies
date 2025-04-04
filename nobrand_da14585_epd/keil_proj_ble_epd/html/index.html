@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>2.13 寸电子墨水屏蓝牙控制器</title>
+	<style type="text/css">
+		.main { width: 950px; margin: 0 auto; background: #fff; font-size: 1rem; font-weight: 400; line-height: 1.5;}
+		h3 { padding-bottom: .3em; border-bottom: 1px solid #CCC; text-align: center; }
+		fieldset { border: none; box-shadow: 0 .5rem 0.5rem rgba(0, 0, 0, 0.2); background-color: #f8f9fa; padding: 10px; margin-bottom: 10px; }
+		fieldset legend { font-weight: bold; color: rgba(0, 0, 255, 0.6); }
+		code { padding: .2em .4em; margin: 0; font-size: 85%; background: #CCC; border-radius: 3px; }
+
+		#status { margin: 10px 0; }
+		#log { width: 500px; height: 300px; margin: 0; padding: 5px; background: #DDD; overflow: auto; font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace; }
+		#log .time { color: #333; }
+		#log .action {color: #666; }
+		#canvas-box { margin-top: 10px; }
+		
+		button { padding: 0.375rem 0.75rem; border: 1px solid #0d6efd; border-radius: 0.375rem; }
+		button:disabled { opacity: 0.65; }
+		button.primary { color: #fff; background-color: #0d6efd; }
+		button.primary:hover { color: #fff; border-color: #0b5ed7; background-color: #0b5ed7; }
+		button.secondary { color: #fff; background-color: #6c757d; }
+		button.secondary:hover { color: #fff; border-color: #565e64; background-color: #5c636a; }
+
+		input[type=text],input[type=number],select { font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; border: 1px solid #dee2e6; border-radius: 0.375rem; padding: .2rem .75rem; }
+		input[type=file] { font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; }
+		input::file-selector-button { font-size: 1rem; font-weight: 400; line-height: 1.5; border: 1px solid #0d6efd; border-radius: 0.375rem; }
+		select { padding: .3rem 2.25rem .3rem .75rem; }
+		input:focus,select:focus { border: 1px solid #86b7fe; box-shadow: 0 0 4px rgba(0, 120, 215, 0.8);; outline: 0; }
+	</style>
+</head>
+
+<body>
+	<div class="main">
+		<h3>2.13 寸电子墨水屏蓝牙控制器</h3>
+		<fieldset>
+			<legend>蓝牙连接</legend>
+			<div style="display: flex; justify-content: space-between;">
+				<div>
+					<button id="connectbutton" type="button" class="primary" onclick="preConnect()">连接</button>
+					<button id="reconnectbutton" type="button" class="secondary" onclick="reConnect()">重连</button>
+				</div>
+				<div>
+					<label for="epddriver">驱动</label>
+					<select disabled id="epddriver" onchange="filterDitheringOptions()">
+						<option value="01">UC8176（黑白屏）</option>
+						<option value="03">UC8176（三色屏）</option>
+						<option value="05">UC8276（三色屏）</option>
+						<option value="04">SSD1619（黑白屏）</option>
+						<option value="02">SSD1619（三色屏）</option>
+					</select>
+					<label for="epdpins">引脚</label>
+					<input disabled id="epdpins" type="text" value="">
+					<button disabled id="setDriverbutton" type="button" class="disabled" onclick="setDriver()">确认</button>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>屏幕控制</legend>
+			<div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+				<div>
+					<button id="clearcanvasbutton" type="button" class="secondary" onclick="clear_canvas()">清除画布</button>
+					<button id="sendimgbutton" type="button" class="primary" onclick="sendimg()">发送图片</button>
+					<label for="interleavedcount" style="margin-left: 20px;">确认间隔</label>
+					<input type="number" id="interleavedcount" value="0" min="0" max="500">
+				</div>
+				<div>
+					<button id="calendarmodebutton" type="button" class="primary" onclick="syncTime(1)">日历模式</button>
+					<button id="clockmodebutton" type="button" class="primary" onclick="syncTime(2)">时钟模式</button>
+				</div>
+				<div>
+					<button id="clearscreenbutton" type="button" class="secondary" onclick="clearScreen()">清除屏幕</button>
+					<input type="text" id="cmdTXT" value="">
+					<button id="sendcmdbutton" type="button" class="primary" onclick="sendcmd()">发送命令</button>
+				</div>
+			</div>
+			<div style="font-size: 85%; color: #666; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dotted #AAA;"><b>状态：</b><span id="status"></span></div>
+			<div id="sendimg">
+				<div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+					<div>
+						<lable for="image_file"></lable>
+						<input type="file" id="image_file" onchange="update_image()" accept=".png,.jpg,.bmp,.webp,.jpeg">
+						<label for="dithering">取模算法</label>
+						<select id="dithering" title="取模算法" onchange="update_image()">
+							<optgroup data-driver="01|04" label="黑白">
+								<option value="none">二值化</option>
+								<option value="bayer">bayer</option>
+								<option value="floydsteinberg">floydsteinberg</option>
+								<option value="Atkinson">Atkinson</option>
+							</optgroup>
+							<optgroup id="dithering-bwr" data-driver="02|03|05" label="黑白红多色">
+								<option value="bwr_floydsteinberg">黑白红floydsteinberg</option>
+								<option value="bwr_Atkinson">黑白红Atkinson</option>
+							</optgroup>
+							<optgroup id="dithering-gray" data-driver="01" label="灰色">
+								<option value="4gray">4 级灰度</option>
+							</optgroup>
+						</select>
+						<label for="threshold">阈值</label>
+						<input type="number" max="255" min="0" value="200" id="threshold" onchange="update_image()">
+					</div>
+					<button type="button" class="secondary" onclick="clearLog()">清空日志</button>
+				</div>
+				<div style="display: flex; justify-content: space-between;">
+					<canvas id="canvas" width="128" height="250" style="border: black solid 1px;"></canvas>
+					<div id="log"></div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>提示</legend>
+			<p style="display: none;">驱动板上 LED 灯（如果有的话）闪烁的时候表示墨水屏处于<b>忙碌</b>状态，此时上位机发送的指令<b>可能不会被执行</b>。</p>
+			<ul style="display: none;">
+				<li><b>日历模式: </b>点击“日历模式”按钮将自动从浏览器同步时间到墨水屏，并切换到日历显示，每天凌晨更新日历</li>
+				<li>
+					<b>时钟模式: </b>点击“时钟模式”按钮将自动从浏览器同步时间到墨水屏，并切换到时钟显示，每分钟刷新一次时间
+					<ul>
+						<li>此功能为预览版，不建议日常使用，目前使用全刷实现（以后可能会支持局刷）</li>
+						<li>三色屏请不要开启时钟模式（刷新太慢，如误点开启可以传图或者清屏退出）</li>
+					</ul>
+				</li>
+				<li><b>引脚配置：</b>格式为十六进制，顺序：MOSI/SCLK/CS/DC/RST/BUSY/BS/EN，前面 7 个引脚配置为必须，EN 为可选（没有用到的引脚可配置为 <code>FF</code>）</li>
+				<li><b>确认间隔: </b>这个间隔指的是数据包数量间隔，即发送此数量的不确认响应的数据包后才发送一次需确认响应的数据包。加大此值可优化传图速度，但是丢包风险也更大（你可能会发现图片有部分位置显示不正常，此时需调小这个值）
+				<li><b>指令列表: </b>支持的指令可在项目 README 查询（此功能一般只会在开发测试时用到）
+				<li><b>灰度：</b>目前仅 <code>UC8176（黑白屏）</code> 驱动支持 4 级灰度，其它驱动选择此选项结果未知</li>
+				<li><b>开源地址：</b>
+					<a href="https://github.com/tsl0922/EPD-nRF5">tsl0922/EPD-nRF5</a>,
+					交流群：<a href="https://qm.qq.com/q/SckzhfDxuu">1033086563</a>
+				</li>
+			</ul>
+			<p style="display: none;">
+				系统睡眠后可通过线圈（NFC/无线充电器）唤醒（需正确配置线圈对应的引脚才有效），否则一旦系统睡眠只有重新上电才能开启蓝牙。如果价签上带有 LED，系统启动时 LED 会闪一下（需正确配置 LED 对应的引脚才有效），以便知道系统是否已经被线圈唤醒。
+			</p>
+			<p style="color: #666;">
+				<strong>致谢：</strong>屏幕驱动代码来自微雪 <a href="https://www.waveshare.net/wiki/E-Paper_Shield" target="_blank">E-Paper Shield</a>，本网页代码最初基于 <a href="https://github.com/atc1441/ATC_TLSR_Paper" target="_blank">atc1441/ATC_TLSR_Paper</a> 项目的网页控制端代码修改而来。
+			</p>
+		</fieldset>
+	</div>
+	<img id="demo-img" style="display: none;"  />
+	<script type="text/javascript" src="js/dithering.js?v=20250318"></script>
+	<script type="text/javascript" src="js/main.js?v=20250318"></script>
+</body>
+
+</html>
